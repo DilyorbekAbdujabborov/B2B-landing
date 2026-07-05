@@ -1,3 +1,4 @@
+let feedback__listEL = document.querySelector(".feedback__list")
 const feedbacks = [
   'You made it so simple. My new site is so much faster and easier to work with than my old site.',
   'I love the simplicity of the design and the ease of use. It has made my work so much more efficient.',
@@ -20,3 +21,48 @@ const feedbacks = [
   'The learning curve was minimal. Our team was productive from day one.',
   'Outstanding value for money. Worth every penny and more.'
 ];
+
+function renderUI(data) {
+  feedback__listEL.innerHTML += `
+<li class="feedback__item">
+  <figure>
+    <img
+      loading="lazy"
+      src="${data.src}"
+      alt="${data.alt}"
+      class="feedbacker__img"
+      width="54"
+      height="54"
+    />
+  </figure>
+
+  <p class="feedback__text">
+    “${data.text}”
+  </p>
+
+  <div class="feedback__person">
+    <h2 class="feedbacker__name">${data.name}</h2>
+    <p class="feedbacker__position">${data.position}</p>
+  </div>
+</li>
+`}
+
+
+async function fetchFeedback() {
+  const count = 2
+  const res = await fetch('https://randomuser.me/api?results=' + count)
+  const data = await res.json()
+
+  data.results.forEach((user) => {
+    renderUI({
+      src: user.picture.medium,
+      name: user.name.first + ' ' + user.name.last,
+      text: feedbacks[Math.floor(Math.random() * feedbacks.length)],
+      alt: user.name.first + "'s feedback",
+      position: 'Client'
+    })
+  })
+}
+
+
+fetchFeedback()
